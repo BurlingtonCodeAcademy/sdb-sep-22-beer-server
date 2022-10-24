@@ -15,6 +15,23 @@ const PORT = 4000
 */
 
 // Middleware method
+
+function logTime(req, res, next) {
+    let date = new Date()
+    console.log(date.toLocaleDateString())
+    next()
+}
+
+
+// Middleware for serving static files
+// app.use(Express.static())
+// app.use(Express.static(__dirname + "/static"))
+
+// app.get("/test", (req, res) => {
+//     res.render("index")
+// })
+
+app.use(logTime)
 app.use(beerRoutes)
 
 
