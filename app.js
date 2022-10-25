@@ -5,6 +5,7 @@ const Express = require("express")
 const app = Express()
 
 const beerRoutes = require("./controllers/beer")
+const auth = require("./controllers/auth")
 
 const PORT = 4000
 
@@ -32,7 +33,12 @@ function logTime(req, res, next) {
 // })
 
 app.use(logTime)
-app.use(beerRoutes)
+app.use(Express.json())
+app.use(Express.urlencoded())
+app.use(auth)
+// This is a main route /api
+// Everything inside beerRoutes becomes a subroute
+app.use("/api", beerRoutes)
 
 
 // .listen() sets up an active server on a port of your choosing
