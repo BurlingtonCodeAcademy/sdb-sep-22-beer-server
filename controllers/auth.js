@@ -7,8 +7,6 @@ let db = []
 router.post("/login", (req, res) => {
     // Object destructuring
     let { email, password } = req.body
-    console.log(password, email)
-
     res.status(202).json({
         message: "User logged in",
         email
@@ -24,7 +22,6 @@ router.post("/login", (req, res) => {
 
 router.post("/register", (req, res) => {
     let { email } = req.body
-
     try {
         db.push(req.body)
         console.log(db)

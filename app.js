@@ -3,6 +3,7 @@
 // Imports express into our file
 const Express = require("express")
 const app = Express()
+const cors = require("cors")
 
 const beerRoutes = require("./controllers/beer")
 const auth = require("./controllers/auth")
@@ -32,9 +33,10 @@ function logTime(req, res, next) {
 //     res.render("index")
 // })
 
+app.use(cors())
 app.use(logTime)
 app.use(Express.json())
-app.use(Express.urlencoded())
+app.use(Express.urlencoded({extended: true}))
 app.use(auth)
 // This is a main route /api
 // Everything inside beerRoutes becomes a subroute
