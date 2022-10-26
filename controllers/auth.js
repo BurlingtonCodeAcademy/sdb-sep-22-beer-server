@@ -2,39 +2,46 @@ const router = require("express").Router()
 
 let db = []
 
-// TODO: Create a login route
-
 router.post("/login", (req, res) => {
     // Object destructuring
     let { email, password } = req.body
-    res.status(202).json({
-        message: "User logged in",
-        email
-    })
-})
-// TODO: Create a register route
-/* 
-    Update the db array with a new user object each time a user registers
 
-    new user should have properties of:
-    fName, lName, email, password
-*/
-
-router.post("/register", (req, res) => {
-    let { email } = req.body
     try {
-        db.push(req.body)
-        console.log(db)
-        res.status(201).json({
-            message: "User created",
+        res.status(202).json({
+            message: "User logged in",
             email
         })
-    } catch (e) {
-        console.log(e)
-        res.send(500).json({
-            message: `Error ${e}`
+    } catch(err) {
+        console.error(err)
+        res.status(500).json({
+            message: `Error ${err}`
         })
     }
+})
+
+router.post("/register", (req, res) => {
+    let { fName, lName, email, password } = req.body
+
+    try {
+        if (!fName || !lName || !email || !password) {
+            throw new Error("The user has provided invalid schema")
+            res.status(406).json({
+                message: "Invalid Schema"
+            })
+        } else {
+            console.log(fName, lName, email, password)
+            res.status(201).json({
+                message: "User created",
+                email
+            })
+        }
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({
+            message: `Error ${err}`
+        })
+    }
+    
 })
 
 
