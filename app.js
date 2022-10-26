@@ -1,6 +1,7 @@
 // npm i express -> imports express into our project
 
 // Imports express into our file
+require("dotenv").config()
 const Express = require("express")
 const app = Express()
 const cors = require("cors")
@@ -8,7 +9,7 @@ const cors = require("cors")
 const beerRoutes = require("./controllers/beer")
 const auth = require("./controllers/auth")
 
-const PORT = 4000
+const PORT = process.env.PORT || 4000
 
 // .get() is a HTTP method
 /* 
@@ -41,7 +42,6 @@ app.use(auth)
 // This is a main route /api
 // Everything inside beerRoutes becomes a subroute
 app.use("/api", beerRoutes)
-
 
 // .listen() sets up an active server on a port of your choosing
 app.listen(PORT, () => {
