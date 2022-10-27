@@ -44,5 +44,34 @@ router.post("/register", (req, res) => {
     
 })
 
+// Cookie Testing Route
+
+// Creating cookie
+router.get("/setcookie", (_, res) => {
+    res.cookie("server-authentication", "tippy-top-secret123", {
+        path: "/",
+        maxAge: 5000,
+        expires: new Date("27 10 2022"),
+        secure: false,
+        httpOnly: true
+    })
+    res.status(200).json({
+        message: "Cookie saved successfully."
+    })
+})
+
+// Deleting cookie
+router.get("/deletecookie", (_, res) => {
+    res.clearCookie("server-authentication", {
+        path: "/",
+        maxAge: 5000,
+        expires: new Date("27 10 2022"),
+        secure: false,
+        httpOnly: true
+    })
+    res.status(200).json({
+        message: "All cookies cleared. No cookie monster present."
+    })
+})
 
 module.exports = router

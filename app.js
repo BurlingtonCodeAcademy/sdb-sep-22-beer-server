@@ -3,6 +3,7 @@
 // Imports express into our file
 require("dotenv").config()
 const Express = require("express")
+const cookieParser = require("cookie-parser")
 const app = Express()
 const cors = require("cors")
 
@@ -10,7 +11,6 @@ const beerRoutes = require("./controllers/beer")
 const auth = require("./controllers/auth")
 
 const PORT = process.env.PORT || 4000
-
 // .get() is a HTTP method
 /* 
     takes a route as string as first parameter
@@ -35,6 +35,7 @@ function logTime(req, res, next) {
 // })
 
 app.use(cors())
+app.use(cookieParser())
 app.use(logTime)
 app.use(Express.json())
 app.use(Express.urlencoded({extended: true}))
