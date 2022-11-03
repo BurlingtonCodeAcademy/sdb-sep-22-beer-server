@@ -1,23 +1,43 @@
 const router = require("express").Router()
 const User = require("../models/User")
+const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 router.post("/login", async (req, res) => {
     // Object destructuring
     let { email, password } = req.body
-
+    
     try {
         const findUser = await User.findOne({ email })
         
-        if (!findUser) {
-            res.status(404).json({
-                message: "User not found"
+        if (findUser) {
+            const verifyPwd = await bcrypt.compare(password, findUser.password)
+            
+            const token = jwt.sign(
+                // payload
+                { _id: findUser._id },
+                // secret key
+                JWT_SECRET_KEY,
+                // options ( 24 hour expiry )
+                { expiresIn: "24h" }
+            )
+
+            verifyPwd
+            ? res.status(200).json({
+                message: `Logged in`,
+                token
             })
+            : res.status(403).json({
+                message: `Incorrect Credentials`
+            })
+            
         } else {
-            res.status(202).json({
-                message: "User logged in",
-                email
+            res.status(200).json({
+                message: `Username not found`
             })
         }
+        
     } catch(err) {
         console.error(err)
         res.status(500).json({
@@ -42,15 +62,25 @@ router.post("/register", async (req, res) => {
                     fName,
                     lName,
                     email,
-                    password
+                    password: bcrypt.hashSync(password, 10)
                 }
             )
 
             await newUser.save()
 
+            const token = jwt.sign(
+                // payload
+                { _id: newUser._id },
+                // secret key
+                JWT_SECRET_KEY,
+                // options ( 24 hour expiry )
+                { expiresIn: "24h" }
+            )
+
             res.status(201).json({
                 message: "User created",
-                newUser
+                newUser,
+                token
             })
         }
     } catch (err) {
