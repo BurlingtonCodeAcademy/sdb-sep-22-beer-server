@@ -1,16 +1,23 @@
 const router = require("express").Router()
+const User = require("../models/User")
 
-let db = []
-
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
     // Object destructuring
     let { email, password } = req.body
 
     try {
-        res.status(202).json({
-            message: "User logged in",
-            email
-        })
+        const findUser = await User.findOne({ email })
+        
+        if (!findUser) {
+            res.status(404).json({
+                message: "User not found"
+            })
+        } else {
+            res.status(202).json({
+                message: "User logged in",
+                email
+            })
+        }
     } catch(err) {
         console.error(err)
         res.status(500).json({
@@ -19,7 +26,7 @@ router.post("/login", (req, res) => {
     }
 })
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
     let { fName, lName, email, password } = req.body
 
     try {
@@ -29,14 +36,25 @@ router.post("/register", (req, res) => {
                 message: "Invalid Schema"
             })
         } else {
-            console.log(fName, lName, email, password)
+            
+            const newUser = new User(
+                {
+                    fName,
+                    lName,
+                    email,
+                    password
+                }
+            )
+
+            await newUser.save()
+
             res.status(201).json({
                 message: "User created",
-                email
+                newUser
             })
         }
     } catch (err) {
-        console.error(err)
+        console.log(err.name, err.message)
         res.status(500).json({
             message: `Error ${err}`
         })

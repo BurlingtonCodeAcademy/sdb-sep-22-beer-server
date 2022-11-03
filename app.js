@@ -6,11 +6,14 @@ const Express = require("express")
 const cookieParser = require("cookie-parser")
 const app = Express()
 const cors = require("cors")
+const mongoose = require("mongoose")
 
 const beerRoutes = require("./controllers/beer")
 const auth = require("./controllers/auth")
 
 const PORT = process.env.PORT || 4000
+const MONGO_URL = process.env.MONGO_URL
+
 // .get() is a HTTP method
 /* 
     takes a route as string as first parameter
@@ -43,6 +46,14 @@ app.use(auth)
 // This is a main route /api
 // Everything inside beerRoutes becomes a subroute
 app.use("/api", beerRoutes)
+
+mongoose
+    .connect(MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(console.log(`Connected to: ${MONGO_URL}`))
+    .catch((err) => console.log(err))
 
 // .listen() sets up an active server on a port of your choosing
 app.listen(PORT, () => {
