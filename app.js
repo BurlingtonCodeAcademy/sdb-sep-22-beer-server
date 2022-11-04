@@ -8,6 +8,7 @@ const app = Express()
 const cors = require("cors")
 const mongoose = require("mongoose")
 
+const validateSession = require("./middlewares/validateSession")
 const beerRoutes = require("./controllers/beer")
 const auth = require("./controllers/auth")
 
@@ -45,7 +46,7 @@ app.use(Express.urlencoded({extended: true}))
 app.use(auth)
 // This is a main route /api
 // Everything inside beerRoutes becomes a subroute
-app.use("/api", beerRoutes)
+app.use("/api", validateSession, beerRoutes)
 
 mongoose
     .connect(MONGO_URL, {

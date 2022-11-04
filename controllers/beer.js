@@ -2,10 +2,10 @@ const router = require("express").Router()
 const Beer = require("../models/Beer")
 
 // Get All Beers
-router.get("/", async (_, res) => {
+router.get("/", async (req, res) => {
     try {
         let findAllBeers = await Beer.find({})
-        
+        console.log(req.user)
         res.status(200).json({
             findAllBeers
         })
